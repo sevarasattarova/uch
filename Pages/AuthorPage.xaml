@@ -1,0 +1,35 @@
+﻿<Page x:Class="uch.Pages.AuthorPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:uch.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="AuthorPage" Background="White">
+
+
+        <StackPanel Margin="20">
+            <Button Content="Добавить новую книгу" Click="AddBook_Click" Margin="0,10" Background="#2ECC71" Foreground="White" Padding="10"/>
+            <TextBlock Text="Мои книги" FontWeight="Bold" FontSize="18" Margin="0,10"/>
+            <ListBox x:Name="MyBooksList">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="LightGray" BorderThickness="1" Margin="5" Padding="10">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding Title}" FontWeight="Bold"/>
+                                <Button Grid.Column="1" Content="Редактировать" Tag="{Binding Id}" Click="EditBook_Click" Background="#F39C12" Foreground="White" Margin="2"/>
+                                <Button Grid.Column="2" Content="Заморожена" Visibility="{Binding IsFrozen, Converter={StaticResource BoolToVis}}" Background="#E74C3C" Foreground="White" Margin="2" IsEnabled="False"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <Button Content="Оспорить заморозку книги" Click="AppealFrozenBook_Click" Margin="0,20" Background="#F39C12" Foreground="White" Padding="10"/>
+        </StackPanel>
+    </Page>

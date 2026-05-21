@@ -1,0 +1,19 @@
+﻿<Page x:Class="uch.Pages.AppealPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:uch.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="AppealPage" Background="White">
+
+
+ 
+        <StackPanel Margin="20">
+            <TextBlock Text="Ваш аккаунт заморожен" FontWeight="Bold" FontSize="20" Margin="0,0,0,10"/>
+            <TextBlock x:Name="ReasonText" Margin="0,10" TextWrapping="Wrap"/>
+            <TextBox x:Name="AppealReason" Margin="0,10" TextWrapping="Wrap" Height="100" Padding="5" Tag="Причина оспаривания"/>
+            <Button x:Name="SendAppealBtn" Content="Отправить заявку на разморозку" Click="SendAppeal_Click" Background="#F39C12" Foreground="White" Padding="10"/>
+        </StackPanel>
+    </Page>

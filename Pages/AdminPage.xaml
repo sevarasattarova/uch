@@ -1,0 +1,108 @@
+﻿<Page x:Class="uch.Pages.AdminPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:uch.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="AdminPage">
+
+    <TabControl Margin="10">
+        <!-- Жалобы -->
+        <TabItem Header="Жалобы">
+            <ListBox x:Name="ReportsList">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="Gray" BorderThickness="1" Margin="5" Padding="10">
+                            <StackPanel>
+                                <TextBlock Text="{Binding Reason}" FontWeight="Bold"/>
+                                <TextBlock Text="От: {Binding ReporterName}"/>
+                                <TextBlock Text="{Binding BookTitle, StringFormat='Книга: {0}'}"/>
+                                <TextBlock Text="{Binding ReviewText, StringFormat='Отзыв: {0}'}"/>
+                                <WrapPanel Margin="0,5,0,0">
+                                    <Button Content="Принять" Tag="{Binding Id}" Click="ApproveReport_Click" Background="#E74C3C" Foreground="White" Margin="2"/>
+                                    <Button Content="Отклонить" Tag="{Binding Id}" Click="RejectReport_Click" Background="#95A5A6" Foreground="White" Margin="2"/>
+                                </WrapPanel>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </TabItem>
+
+        <!-- Заявки на разморозку -->
+        <TabItem Header="Заявки на разморозку">
+            <ListBox x:Name="FreezeAppealsList">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="Gray" BorderThickness="1" Margin="5" Padding="10">
+                            <StackPanel>
+                                <TextBlock Text="{Binding UserName}" FontWeight="Bold"/>
+                                <TextBlock Text="Тип: {Binding TargetType}"/>
+                                <TextBlock Text="ID объекта: {Binding TargetId}"/>
+                                <TextBlock Text="Причина: {Binding Reason}"/>
+                                <WrapPanel Margin="0,5,0,0">
+                                    <Button Content="Разморозить" Tag="{Binding Id}" Click="ApproveFreezeAppeal_Click" Background="#2ECC71" Foreground="White" Margin="2"/>
+                                    <Button Content="Отклонить" Tag="{Binding Id}" Click="RejectFreezeAppeal_Click" Background="#E74C3C" Foreground="White" Margin="2"/>
+                                </WrapPanel>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </TabItem>
+
+        <!-- Заявки на роль автора -->
+        <TabItem Header="Заявки на роль автора">
+            <ListBox x:Name="AuthorRequestsList">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="Gray" BorderThickness="1" Margin="5" Padding="10">
+                            <StackPanel>
+                                <TextBlock Text="{Binding UserName}" FontWeight="Bold"/>
+                                <TextBlock Text="Дата: {Binding RequestDate, StringFormat=dd.MM.yyyy}"/>
+                                <WrapPanel Margin="0,5,0,0">
+                                    <Button Content="Одобрить" Tag="{Binding Id}" Click="ApproveAuthorRequest_Click" Background="#2ECC71" Foreground="White" Margin="2"/>
+                                    <Button Content="Отклонить" Tag="{Binding Id}" Click="RejectAuthorRequest_Click" Background="#E74C3C" Foreground="White" Margin="2"/>
+                                </WrapPanel>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </TabItem>
+
+        <!-- Замороженные объекты -->
+        <TabItem Header="Замороженные объекты">
+            <ListBox x:Name="FrozenItemsList"/>
+        </TabItem>
+
+        <!-- Пользователи -->
+        <TabItem Header="Пользователи">
+            <ListBox x:Name="UsersList">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="Gray" BorderThickness="1" Margin="5" Padding="10">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Username}" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding RoleName}"/>
+                                    <TextBlock Text="{Binding Email}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                    <Button Content="Роль" Tag="{Binding Id}" Click="ChangeUserRole_Click" Background="#F39C12" Foreground="White" Margin="2"/>
+                                    <Button Content="Сброс пароля" Tag="{Binding Id}" Click="ResetPassword_Click" Background="#3498DB" Foreground="White" Margin="2"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </TabItem>
+    </TabControl>
+</Page>

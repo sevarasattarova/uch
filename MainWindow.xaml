@@ -6,7 +6,76 @@
         xmlns:local="clr-namespace:uch"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+
     <Grid>
-        
-    </Grid>
-</Window>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Sidebar -->
+            <Border Background="#2C3E50" Width="70">
+                <StackPanel Margin="0,20">
+                    <!-- Каталог -->
+                    <Button x:Name="CatalogBtn" 
+                        Click="Catalog_Click" 
+                        Width="50" Height="50" 
+                        Margin="10,5" 
+                        ToolTip="Каталог">
+                        <Image Source="/Images/catalog.png" Width="32" Height="32"/>
+                    </Button>
+
+                    <!-- Списки книг -->
+                    <Button x:Name="ListsBtn" 
+                        Click="Lists_Click" 
+                        Width="50" Height="50" 
+                        Margin="10,5" 
+                        ToolTip="Списки книг">
+                        <Image Source="/Images/lists.png" Width="32" Height="32"/>
+                    </Button>
+
+                    <!-- Администрирование -->
+                    <Button x:Name="AdminBtn" 
+                        Click="Admin_Click" 
+                        Width="50" Height="50" 
+                        Margin="10,5" 
+                        ToolTip="Администрирование"
+                        Visibility="Collapsed">
+                        <Image Source="/Images/admin.png" Width="32" Height="32"/>
+                    </Button>
+
+                    <!-- Страница автора -->
+                    <Button x:Name="AuthorBtn" 
+                        Click="Author_Click" 
+                        Width="50" Height="50" 
+                        Margin="10,5" 
+                        ToolTip="Страница автора"
+                        Visibility="Collapsed">
+                        <Image Source="/Images/author.png" Width="32" Height="32"/>
+                    </Button>
+
+                    <!-- Предупреждение о заморозке -->
+                    <Button x:Name="WarningBtn" 
+                        Click="Warning_Click" 
+                        Width="50" Height="50" 
+                        Margin="10,5" 
+                        ToolTip="Предупреждение"
+                        Visibility="Collapsed">
+                        <Image Source="/Images/warning.png" Width="32" Height="32"/>
+                    </Button>
+
+                    <!-- Профиль -->
+                    <Button x:Name="ProfileBtn" 
+                        Click="Profile_Click" 
+                        Width="50" Height="50" 
+                        Margin="10,5" 
+                        ToolTip="Профиль">
+                        <Image Source="/Images/profile.png" Width="32" Height="32"/>
+                    </Button>
+                </StackPanel>
+            </Border>
+
+            <!-- Frame для страниц -->
+            <Frame x:Name="MainFrame" Grid.Column="1" NavigationUIVisibility="Hidden"/>
+        </Grid>
+    </Window>

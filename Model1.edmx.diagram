@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="edced20b1e2241f2bc86ba5e9d62c9d6" Name="Diagram1">
+        <EntityTypeShape EntityType="uchprModel.AuthorRequests" Width="1.5" PointX="5.25" PointY="5.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="uchprModel.Books" Width="1.5" PointX="5.25" PointY="8.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="uchprModel.FreezeAppeals" Width="1.5" PointX="5.25" PointY="13.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="uchprModel.Genres" Width="1.5" PointX="7.5" PointY="9.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="uchprModel.Reports" Width="1.5" PointX="7.5" PointY="12.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="uchprModel.Reviews" Width="1.5" PointX="10.5" PointY="9.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="uchprModel.Roles" Width="1.5" PointX="0.75" PointY="10.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="uchprModel.sysdiagrams" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="uchprModel.UserBookLists" Width="1.5" PointX="7.5" PointY="6.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="uchprModel.Users" Width="1.5" PointX="3" PointY="9" IsExpanded="true" />
+        <AssociationConnector Association="uchprModel.FK__AuthorReq__UserI__75A278F5" ManuallyRouted="false" />
+        <AssociationConnector Association="uchprModel.FK__Books__AuthorId__5812160E" ManuallyRouted="false" />
+        <AssociationConnector Association="uchprModel.FK__Reports__BookId__68487DD7" ManuallyRouted="false" />
+        <AssociationConnector Association="uchprModel.FK__Reviews__BookId__628FA481" ManuallyRouted="false" />
+        <AssociationConnector Association="uchprModel.FK__UserBookL__BookI__70DDC3D8" ManuallyRouted="false" />
+        <AssociationConnector Association="uchprModel.FK__FreezeApp__UserI__7B5B524B" ManuallyRouted="false" />
+        <AssociationConnector Association="uchprModel.FK__Reports__Reporte__6754599E" ManuallyRouted="false" />
+        <AssociationConnector Association="uchprModel.FK__Reports__ReviewI__693CA210" ManuallyRouted="false" />
+        <AssociationConnector Association="uchprModel.FK__Reviews__UserId__619B8048" ManuallyRouted="false" />
+        <AssociationConnector Association="uchprModel.FK__Users__RoleId__4F7CD00D" ManuallyRouted="false" />
+        <AssociationConnector Association="uchprModel.FK__UserBookL__UserI__6FE99F9F" ManuallyRouted="false" />
+        <AssociationConnector Association="uchprModel.BookGenres" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

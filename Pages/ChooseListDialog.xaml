@@ -1,0 +1,22 @@
+﻿<Page x:Class="uch.Pages.ChooseListDialog"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:uch.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="ChooseListDialog" Background="White">
+    
+    <StackPanel Margin="20">
+            <TextBlock Text="Выберите список" FontWeight="Bold" Margin="0,0,0,10"/>
+            <ComboBox x:Name="ListCombo" Margin="0,0,0,20">
+                <ComboBoxItem Content="📖 Читаю" Tag="Reading"/>
+                <ComboBoxItem Content="📚 Прочитано" Tag="Read"/>
+                <ComboBoxItem Content="📅 В планах" Tag="Planned"/>
+                <ComboBoxItem Content="❌ Заброшено" Tag="Dropped"/>
+            </ComboBox>
+            <Button Content="Выбрать" Click="Select_Click" Background="#3498DB" Foreground="White" Padding="8"/>
+            <Button Content="Отмена" Click="Cancel_Click" Margin="0,5,0,0" Background="#95A5A6" Foreground="White" Padding="8"/>
+        </StackPanel>
+    </Page>
