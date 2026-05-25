@@ -21,7 +21,7 @@
                             <Border BorderBrush="LightGray" BorderThickness="1" Margin="5" Padding="10">
                                 <StackPanel>
                                     <TextBlock Text="{Binding BookTitle}" FontWeight="Bold"/>
-                                    <TextBlock Text="Оценка: {Binding Rating}⭐"/>
+                                <TextBlock Text="{Binding Rating, StringFormat='Оценка: {0}'}"/>
                                     <TextBlock Text="{Binding Text}" TextWrapping="Wrap"/>
                                     <TextBlock Text="{Binding CreatedAt, StringFormat=dd.MM.yyyy}" Foreground="Gray"/>
                                 </StackPanel>

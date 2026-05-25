@@ -31,7 +31,7 @@ namespace uch.Pages
         private void LoadAllTabs()
         {
             LoadReports();
-            LoadFreezeAppeals();
+            LoadUnfreezeRequests();
             LoadAuthorRequests();
             LoadFrozenItems();
             LoadUsers();
@@ -75,31 +75,60 @@ namespace uch.Pages
         {
             int id = (int)((Button)sender).Tag;
             var report = Core.Context.Reports.Find(id);
-            if (report != null)
+
+            if (report == null) return;
+
+            // ПРОВЕРКА: это жалоба на автора?
+            if (report.Reason != null && report.Reason.Contains("жалоба на автора"))
             {
-                if (report.BookId != null)
+                // НАХОДИМ АВТОРА через книгу
+                var book = Core.Context.Books.Find(report.BookId);
+                if (book != null)
                 {
-                    var book = Core.Context.Books.Find(report.BookId);
-                    if (book != null)
+                    var author = Core.Context.Users.Find(book.AuthorId);
+                    if (author != null)
                     {
-                        book.IsFrozen = true;
-                        book.FreezeReason = $"Заморожено по жалобе #{report.Id}";
+                        // БЛОКИРУЕМ АВТОРА, А НЕ КНИГУ!
+                        author.IsFrozen = true;
+                        author.FreezeReason = $"Заморожено по жалобе #{report.Id}. Причина: {report.Reason}";
+                        Core.Context.SaveChanges();
+
+                        MessageBox.Show($"АВТОР {author.Username} ЗАМОРОЖЕН!", "Успех",
+                            MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
-                else if (report.ReviewId != null)
-                {
-                    var review = Core.Context.Reviews.Find(report.ReviewId);
-                    if (review != null)
-                    {
-                        review.IsFrozen = true;
-                        review.FreezeReason = $"Заморожено по жалобе #{report.Id}";
-                    }
-                }
-                report.IsResolved = true;
-                Core.Context.SaveChanges();
-                LoadReports();
-                LoadFrozenItems();
             }
+            // Жалоба на книгу
+            else if (report.BookId != null && report.ReviewId == null)
+            {
+                var book = Core.Context.Books.Find(report.BookId);
+                if (book != null)
+                {
+                    book.IsFrozen = true;
+                    book.FreezeReason = $"Заморожено по жалобе #{report.Id}";
+                    Core.Context.SaveChanges();
+                    MessageBox.Show($"Книга '{book.Title}' заморожена.", "Успех");
+                }
+            }
+            // Жалоба на отзыв
+            else if (report.ReviewId != null)
+            {
+                var review = Core.Context.Reviews.Find(report.ReviewId);
+                if (review != null)
+                {
+                    review.IsFrozen = true;
+                    review.FreezeReason = $"Заморожено по жалобе #{report.Id}";
+                    Core.Context.SaveChanges();
+                    MessageBox.Show("Отзыв заморожен.", "Успех");
+                }
+            }
+
+            report.IsResolved = true;
+            Core.Context.SaveChanges();
+
+            LoadReports();
+            LoadFrozenItems();
+            LoadUsers();
         }
 
         private void RejectReport_Click(object sender, RoutedEventArgs e)
@@ -116,31 +145,113 @@ namespace uch.Pages
 
 
         // ===================== Заявки на разморозку =====================
-        private void LoadFreezeAppeals()
+        private void LoadUnfreezeRequests()
         {
-            var appeals = Core.Context.FreezeAppeals.Where(a => a.Status == "Pending").ToList();
-
-            var result = new List<object>();
-            foreach (var appeal in appeals)
-            {
-                var user = Core.Context.Users.FirstOrDefault(u => u.Id == appeal.UserId);
-                result.Add(new
+            var requests = Core.Context.FreezeAppeals
+                .Where(r => r.Status == "Pending")
+                .Select(r => new
                 {
-                    appeal.Id,
-                    appeal.TargetType,
-                    appeal.TargetId,
-                    appeal.Reason,
-                    UserName = user != null ? user.Username : ""
-                });
-            }
-            FreezeAppealsList.ItemsSource = result;
+                    r.Id,
+                    r.TargetType,
+                    r.TargetId,
+                    r.Reason,
+                    UserName = r.Users.Username,
+                    TargetName = r.TargetType == "Book"
+                        ? Core.Context.Books.Where(b => b.Id == r.TargetId).Select(b => b.Title).FirstOrDefault()
+                        : (r.TargetType == "Review"
+                            ? Core.Context.Reviews.Where(rv => rv.Id == r.TargetId).Select(rv => rv.Text).FirstOrDefault()
+                            : r.Users.Username)
+                })
+                .ToList();
+
+            FreezeAppealsList.ItemsSource = requests;
         }
 
+        private void ApproveUnfreeze_Click(object sender, RoutedEventArgs e)
+        {
+            int id = (int)((Button)sender).Tag;
+            var request = Core.Context.FreezeAppeals.Find(id);
+
+            if (request == null) return;
+
+            if (request.TargetType == "User")
+            {
+                var user = Core.Context.Users.Find(request.TargetId);
+                if (user != null)
+                {
+                    user.IsFrozen = false;
+                    user.FreezeReason = null;
+                    MessageBox.Show($"✅ Пользователь {user.Username} разморожен.", "Успех",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            else if (request.TargetType == "Book")
+            {
+                var book = Core.Context.Books.Find(request.TargetId);
+                if (book != null)
+                {
+                    book.IsFrozen = false;
+                    book.FreezeReason = null;
+                    MessageBox.Show($"✅ Книга '{book.Title}' разморожена.", "Успех",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            else if (request.TargetType == "Review")
+            {
+                var review = Core.Context.Reviews.Find(request.TargetId);
+                if (review != null)
+                {
+                    review.IsFrozen = false;
+                    review.FreezeReason = null;
+                    MessageBox.Show($"✅ Отзыв разморожен.", "Успех",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+
+            request.Status = "Approved";
+            Core.Context.SaveChanges();
+
+            LoadUnfreezeRequests();
+            LoadFrozenItems();
+        }
+
+        private void RejectUnfreeze_Click(object sender, RoutedEventArgs e)
+        {
+            int id = (int)((Button)sender).Tag;
+            var request = Core.Context.FreezeAppeals.Find(id);
+
+            if (request != null)
+            {
+                request.Status = "Rejected";
+                Core.Context.SaveChanges();
+                LoadUnfreezeRequests();
+
+                MessageBox.Show("✅ Заявка отклонена.", "Успех",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+        // ===================== Заявки на разморозку =====================
+        private void LoadFreezeAppeals()
+        {
+            var appeals = Core.Context.FreezeAppeals
+                .Where(a => a.Status == "Pending")
+                .Select(a => new
+                {
+                    a.Id,
+                    a.TargetType,
+                    a.TargetId,
+                    a.Reason,
+                    UserName = a.Users.Username
+                })
+                .ToList();
+            FreezeAppealsList.ItemsSource = appeals;
+        }
 
         private void ApproveFreezeAppeal_Click(object sender, RoutedEventArgs e)
         {
             int id = (int)((Button)sender).Tag;
             var appeal = Core.Context.FreezeAppeals.Find(id);
+
             if (appeal != null)
             {
                 if (appeal.TargetType == "User")
@@ -158,10 +269,14 @@ namespace uch.Pages
                     var review = Core.Context.Reviews.Find(appeal.TargetId);
                     if (review != null) review.IsFrozen = false;
                 }
+
                 appeal.Status = "Approved";
                 Core.Context.SaveChanges();
                 LoadFreezeAppeals();
                 LoadFrozenItems();
+
+                MessageBox.Show("Объект разморожен.", "Успех",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -169,14 +284,17 @@ namespace uch.Pages
         {
             int id = (int)((Button)sender).Tag;
             var appeal = Core.Context.FreezeAppeals.Find(id);
+
             if (appeal != null)
             {
                 appeal.Status = "Rejected";
                 Core.Context.SaveChanges();
                 LoadFreezeAppeals();
+
+                MessageBox.Show("Заявка отклонена.", "Успех",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
-
         // ===================== Заявки на роль автора =====================
         private void LoadAuthorRequests()
         {
@@ -228,26 +346,22 @@ namespace uch.Pages
             }
         }
 
-        // ===================== Замороженные объекты =====================
         private void LoadFrozenItems()
         {
             var frozenItems = new List<string>();
 
-            // Замороженные пользователи
             var frozenUsers = Core.Context.Users.Where(u => u.IsFrozen).ToList();
             foreach (var user in frozenUsers)
             {
                 frozenItems.Add($"Пользователь: {user.Username} (причина: {user.FreezeReason})");
             }
 
-            // Замороженные книги
             var frozenBooks = Core.Context.Books.Where(b => b.IsFrozen).ToList();
             foreach (var book in frozenBooks)
             {
                 frozenItems.Add($"Книга: {book.Title} (причина: {book.FreezeReason})");
             }
 
-            // Замороженные отзывы
             var frozenReviews = Core.Context.Reviews.Where(r => r.IsFrozen).ToList();
             foreach (var review in frozenReviews)
             {
@@ -260,7 +374,6 @@ namespace uch.Pages
             FrozenItemsList.ItemsSource = frozenItems;
         }
 
-        // ===================== Пользователи =====================
         private void LoadUsers()
         {
             var users = Core.Context.Users.ToList();
@@ -285,10 +398,13 @@ namespace uch.Pages
         {
             int userId = (int)((Button)sender).Tag;
             var user = Core.Context.Users.Find(userId);
-            if (user != null)
+            if (user == null) return;
+
+            var roles = Core.Context.Roles.ToList();
+            var dialog = new ChooseRoleDialog(roles, user.RoleId, userId);
+
+            if (NavigationService != null)
             {
-                var roles = Core.Context.Roles.ToList();
-                var dialog = new ChooseRoleDialog(roles, user.RoleId, userId);
                 NavigationService.Navigated += OnRoleDialogReturn;
                 NavigationService.Navigate(dialog);
             }
@@ -296,17 +412,24 @@ namespace uch.Pages
 
         private void OnRoleDialogReturn(object sender, NavigationEventArgs e)
         {
-            NavigationService.Navigated -= OnRoleDialogReturn;
+            if (NavigationService != null)
+            {
+                NavigationService.Navigated -= OnRoleDialogReturn;
+            }
+
+            // ПРОВЕРКА ФЛАГА
             if (ChooseRoleDialog.IsConfirmed)
             {
                 int userId = ChooseRoleDialog.TargetUserId;
                 int newRoleId = ChooseRoleDialog.SelectedRoleId;
+
                 var user = Core.Context.Users.Find(userId);
                 if (user != null)
                 {
                     user.RoleId = newRoleId;
                     Core.Context.SaveChanges();
                     LoadUsers();
+                    MessageBox.Show($"Роль пользователя {user.Username} изменена", "Успех");
                 }
             }
         }

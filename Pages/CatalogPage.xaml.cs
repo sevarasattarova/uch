@@ -60,11 +60,17 @@ namespace uch.Pages
                 b.Title,
                 b.Rating,
                 AuthorName = b.Users.Username,
+                CoverImageUrl = b.CoverImageUrl,
                 // При необходимости можно добавить CoverImageUrl, количество отзывов и т.д.
             }).ToList();
 
             // 6. Присвоение ItemsSource
             BooksGrid.ItemsSource = books;
+            if (!Core.IsAdmin)
+            {
+                query = query.Where(b => b.IsFrozen == false);
+            }
+
         }
 
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e) => LoadBooks();

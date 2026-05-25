@@ -1,55 +1,59 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace uch.Pages
 {
-    /// <summary>
-    /// Логика взаимодействия для LoginPage.xaml
-    /// </summary>
     public partial class LoginPage : Page
     {
         public LoginPage()
         {
             InitializeComponent();
         }
-      
 
-            private void Login_Click(object sender, RoutedEventArgs e)
+        private void Login_Click(object sender, RoutedEventArgs e)
+        {
+            var user = Core.Context.Users
+                .FirstOrDefault(u => u.Username == UsernameBox.Text && u.PasswordHash == PasswordBox.Password);
+
+            if (user != null)
             {
-                var user = Core.Context.Users.FirstOrDefault(u => u.Username == UsernameBox.Text && u.PasswordHash == PasswordBox.Password);
-                if (user != null)
+                // ПРОВЕРКА НА ЗАМОРОЗКУ
+                if (user.IsFrozen)
                 {
-                    if (user.IsFrozen)
+                    // Сохраняем замороженного пользователя временно
+                    Core.TempFrozenUser = user;
+
+                    // Открываем окно с информацией о заморозке
+                    var freezeWindow = new Window
                     {
-                        MessageBox.Show($"Ваш аккаунт заморожен. Причина: {user.FreezeReason}", "Доступ запрещён", MessageBoxButton.OK, MessageBoxImage.Warning);
-                        return;
-                    }
-                    Core.CurrentUser = user;
-                    var mainWin = new MainWindow();
-                    mainWin.Show();
+                        Title = "Аккаунт заморожен",
+                        Content = new AppealPage(),
+                        Width = 450,
+                        Height = 350,
+                        WindowStartupLocation = WindowStartupLocation.CenterOwner
+                    };
+                    freezeWindow.Show();
                     Window.GetWindow(this).Close();
+                    return;
                 }
-                else
-                {
-                    MessageBox.Show("Неверный логин или пароль", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
 
-            private void Register_Click(object sender, RoutedEventArgs e)
+                Core.CurrentUser = user;
+                var mainWindow = new MainWindow();
+                mainWindow.Show();
+                Window.GetWindow(this).Close();
+            }
+            else
             {
-                NavigationService.Navigate(new RegisterPage());
+                MessageBox.Show("Неверный логин или пароль", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        private void Register_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new RegisterPage());
+        }
     }
+}

@@ -13,10 +13,10 @@ namespace uch
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class uchprEntities1 : DbContext
+    public partial class uchprEntities2 : DbContext
     {
-        public uchprEntities1()
-            : base("name=uchprEntities1")
+        public uchprEntities2()
+            : base("name=uchprEntities2")
         {
         }
     
@@ -32,7 +32,6 @@ namespace uch
         public virtual DbSet<Reports> Reports { get; set; }
         public virtual DbSet<Reviews> Reviews { get; set; }
         public virtual DbSet<Roles> Roles { get; set; }
-        public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
         public virtual DbSet<UserBookLists> UserBookLists { get; set; }
         public virtual DbSet<Users> Users { get; set; }
     }

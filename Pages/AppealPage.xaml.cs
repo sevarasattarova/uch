@@ -1,72 +1,84 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace uch.Pages
 {
-    /// <summary>
-    /// Логика взаимодействия для AppealPage.xaml
-    /// </summary>
     public partial class AppealPage : Page
     {
         public AppealPage()
         {
             InitializeComponent();
-            
-                LoadFreezeInfo();
+            LoadFreezeInfo();
+        }
+
+        private void LoadFreezeInfo()
+        {
+            if (Core.TempFrozenUser != null)
+            {
+                string reason = Core.TempFrozenUser.FreezeReason ?? "Причина не указана";
+                FreezeReasonText.Text = reason;
+            }
+            else
+            {
+                FreezeReasonText.Text = "Причина не указана";
+            }
+        }
+
+        private void SubmitAppeal_Click(object sender, RoutedEventArgs e)
+        {
+            if (Core.TempFrozenUser == null)
+            {
+                MessageBox.Show("Ошибка: данные пользователя не найдены.", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
             }
 
-            private void LoadFreezeInfo()
+            // Проверяем, нет ли уже отправленной заявки
+            var existing = Core.Context.FreezeAppeals
+                .FirstOrDefault(r => r.UserId == Core.TempFrozenUser.Id &&
+                                    r.TargetType == "User" &&
+                                    r.Status == "Pending");
+
+            if (existing != null)
             {
-                if (Core.CurrentUser != null && Core.CurrentUser.IsFrozen)
-                {
-                    ReasonText.Text = $"Причина заморозки: {Core.CurrentUser.FreezeReason}";
-                }
-                else
-                {
-                    ReasonText.Text = "Ваш аккаунт не заморожен.";
-                    SendAppealBtn.IsEnabled = false;
-                }
+                MessageBox.Show("Заявка на разморозку уже отправлена и ожидает рассмотрения.",
+                    "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
             }
 
-            private void SendAppeal_Click(object sender, RoutedEventArgs e)
+            // Создаём диалог для ввода причины
+            var inputDialog = new ReasonDialog("Укажите причину для разморозки аккаунта:",
+                "Уважаемый администратор, прошу разморозить мой аккаунт...");
+
+            if (inputDialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(inputDialog.Answer))
             {
-                if (string.IsNullOrWhiteSpace(AppealReason.Text))
-                {
-                    MessageBox.Show("Укажите причину оспаривания.");
-                    return;
-                }
-                var existingAppeal = Core.Context.FreezeAppeals
-                    .FirstOrDefault(a => a.UserId == Core.CurrentUser.Id && a.TargetType == "User" && a.TargetId == Core.CurrentUser.Id && a.Status == "Pending");
-                if (existingAppeal != null)
-                {
-                    MessageBox.Show("Заявка уже отправлена и ожидает рассмотрения.");
-                    return;
-                }
                 var appeal = new FreezeAppeals
                 {
-                    UserId = Core.CurrentUser.Id,
+                    UserId = Core.TempFrozenUser.Id,
                     TargetType = "User",
-                    TargetId = Core.CurrentUser.Id,
-                    Reason = AppealReason.Text,
+                    TargetId = Core.TempFrozenUser.Id,
+                    Reason = inputDialog.Answer,
                     Status = "Pending",
                     CreatedAt = DateTime.Now
                 };
+
                 Core.Context.FreezeAppeals.Add(appeal);
                 Core.Context.SaveChanges();
-                MessageBox.Show("Заявка на разморозку отправлена администратору.");
+
+                MessageBox.Show("✅ Заявка на разморозку аккаунта отправлена администратору.\n\nОжидайте решения.",
+                    "Заявка отправлена", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                BackToLogin_Click(sender, e);
             }
         }
-    }
 
+        private void BackToLogin_Click(object sender, RoutedEventArgs e)
+        {
+            Core.TempFrozenUser = null;
+            var loginPage = new LoginPage();
+            NavigationService.Navigate(loginPage);
+        }
+    }
+}

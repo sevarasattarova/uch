@@ -17,7 +17,7 @@
                         <Border BorderBrush="Gray" BorderThickness="1" Margin="5" Padding="10">
                             <StackPanel>
                                 <TextBlock Text="{Binding Reason}" FontWeight="Bold"/>
-                                <TextBlock Text="От: {Binding ReporterName}"/>
+                                <TextBlock Text="{Binding ReporterName, StringFormat='От: {0}'}"/>
                                 <TextBlock Text="{Binding BookTitle, StringFormat='Книга: {0}'}"/>
                                 <TextBlock Text="{Binding ReviewText, StringFormat='Отзыв: {0}'}"/>
                                 <WrapPanel Margin="0,5,0,0">
