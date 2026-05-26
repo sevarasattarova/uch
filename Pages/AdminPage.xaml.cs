@@ -31,12 +31,11 @@ namespace uch.Pages
         private void LoadAllTabs()
         {
             LoadReports();
-            LoadUnfreezeRequests();
+            LoadFreezeAppeals();
             LoadAuthorRequests();
             LoadFrozenItems();
             LoadUsers();
         }
-
         // ===================== Жалобы =====================
         private void LoadReports()
         {
@@ -257,23 +256,38 @@ namespace uch.Pages
                 if (appeal.TargetType == "User")
                 {
                     var user = Core.Context.Users.Find(appeal.TargetId);
-                    if (user != null) user.IsFrozen = false;
+                    if (user != null)
+                    {
+                        user.IsFrozen = false;
+                        user.FreezeReason = null;  // ← ОЧИЩАЕМ ПРИЧИНУ
+                    }
                 }
                 else if (appeal.TargetType == "Book")
                 {
                     var book = Core.Context.Books.Find(appeal.TargetId);
-                    if (book != null) book.IsFrozen = false;
+                    if (book != null)
+                    {
+                        book.IsFrozen = false;
+                        book.FreezeReason = null;  // ← ОЧИЩАЕМ ПРИЧИНУ
+                    }
                 }
                 else if (appeal.TargetType == "Review")
                 {
                     var review = Core.Context.Reviews.Find(appeal.TargetId);
-                    if (review != null) review.IsFrozen = false;
+                    if (review != null)
+                    {
+                        review.IsFrozen = false;
+                        review.FreezeReason = null;  // ← ОЧИЩАЕМ ПРИЧИНУ
+                    }
                 }
 
                 appeal.Status = "Approved";
                 Core.Context.SaveChanges();
-                LoadFreezeAppeals();
-                LoadFrozenItems();
+
+                // ОБНОВЛЯЕМ ВСЕ СПИСКИ
+                LoadFreezeAppeals();   // обновляем список заявок
+                LoadFrozenItems();      // обновляем список замороженных объектов
+                LoadUsers();            // обновляем список пользователей (если разморозили пользователя)
 
                 MessageBox.Show("Объект разморожен.", "Успех",
                     MessageBoxButton.OK, MessageBoxImage.Information);
@@ -289,7 +303,7 @@ namespace uch.Pages
             {
                 appeal.Status = "Rejected";
                 Core.Context.SaveChanges();
-                LoadFreezeAppeals();
+                LoadFreezeAppeals();   // обновляем список заявок
 
                 MessageBox.Show("Заявка отклонена.", "Успех",
                     MessageBoxButton.OK, MessageBoxImage.Information);

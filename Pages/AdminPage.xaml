@@ -32,16 +32,16 @@
         </TabItem>
 
         <!-- Заявки на разморозку -->
-        <TabItem Header="Заявки на разморозку">
+        <TabItem Header="Заявки на разморозку" HorizontalAlignment="Left" Margin="-2,-2,0,0" Width="139">
             <ListBox x:Name="FreezeAppealsList">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Border BorderBrush="Gray" BorderThickness="1" Margin="5" Padding="10">
                             <StackPanel>
                                 <TextBlock Text="{Binding UserName}" FontWeight="Bold"/>
-                                <TextBlock Text="Тип: {Binding TargetType}"/>
-                                <TextBlock Text="ID объекта: {Binding TargetId}"/>
-                                <TextBlock Text="Причина: {Binding Reason}"/>
+                                <TextBlock Text="{Binding TargetType, StringFormat=Тип: {0}}"/>
+                                <TextBlock Text="{Binding TargetId, StringFormat=ID объекта: {0}}"/>
+                                <TextBlock Text="{Binding Reason, StringFormat=Причина:{0}}"/>
                                 <WrapPanel Margin="0,5,0,0">
                                     <Button Content="Разморозить" Tag="{Binding Id}" Click="ApproveFreezeAppeal_Click" Background="#2ECC71" Foreground="White" Margin="2"/>
                                     <Button Content="Отклонить" Tag="{Binding Id}" Click="RejectFreezeAppeal_Click" Background="#E74C3C" Foreground="White" Margin="2"/>
@@ -61,7 +61,7 @@
                         <Border BorderBrush="Gray" BorderThickness="1" Margin="5" Padding="10">
                             <StackPanel>
                                 <TextBlock Text="{Binding UserName}" FontWeight="Bold"/>
-                                <TextBlock Text="Дата: {Binding RequestDate, StringFormat=dd.MM.yyyy}"/>
+                                <TextBlock Text="{Binding RequestDate, StringFormat=dd.MM.yyyy}"/>
                                 <WrapPanel Margin="0,5,0,0">
                                     <Button Content="Одобрить" Tag="{Binding Id}" Click="ApproveAuthorRequest_Click" Background="#2ECC71" Foreground="White" Margin="2"/>
                                     <Button Content="Отклонить" Tag="{Binding Id}" Click="RejectAuthorRequest_Click" Background="#E74C3C" Foreground="White" Margin="2"/>

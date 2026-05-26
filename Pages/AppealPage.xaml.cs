@@ -76,9 +76,7 @@ namespace uch.Pages
 
         private void BackToLogin_Click(object sender, RoutedEventArgs e)
         {
-            Core.TempFrozenUser = null;
-            var loginPage = new LoginPage();
-            NavigationService.Navigate(loginPage);
+            Application.Current.Shutdown();
         }
     }
 }

@@ -35,6 +35,10 @@ namespace uch.Pages
         private void LoadBooks()
         {
             var query = Core.Context.Books.AsQueryable();
+            if (!Core.IsAdmin)
+            {
+                query = query.Where(b => b.IsFrozen == false);
+            }
 
             if (!string.IsNullOrWhiteSpace(SearchBox.Text))
                 query = query.Where(b => b.Title.Contains(SearchBox.Text) || b.Users.Username.Contains(SearchBox.Text));

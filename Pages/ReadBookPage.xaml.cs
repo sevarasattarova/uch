@@ -21,14 +21,22 @@ namespace uch.Pages
     /// </summary>
     public partial class ReadBookPage : Page
     {
-        private int _bookId;
+      
+            public ReadBookPage(int bookId)
+            {
+                InitializeComponent();
+                var book = Core.Context.Books.Find(bookId);
 
-        public ReadBookPage(int bookId)
-        {
-            InitializeComponent();
-            _bookId = bookId;
-            var book = Core.Context.Books.Find(_bookId);
-            DataContext = book;
+                // Проверка: если книга заморожена и пользователь не админ
+                if (book != null && book.IsFrozen && !Core.IsAdmin)
+                {
+                    MessageBox.Show("Эта книга заморожена и недоступна для чтения.",
+                        "Доступ запрещён", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    NavigationService.GoBack();
+                    return;
+                }
+
+                DataContext = book;
+            }
         }
     }
-}
