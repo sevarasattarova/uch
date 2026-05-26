@@ -34,7 +34,7 @@ namespace uch.Pages
                 TextContentBox.Text = book.TextContent;
                 CoverUrlBox.Text = book.CoverImageUrl;
 
-                // Отмечаем выбранные жанры (через навигационное свойство)
+                // Отмечаем выбранные жанры 
                 if (book.Genres != null)
                 {
                     var bookGenreIds = book.Genres.Select(g => g.Id).ToList();
@@ -78,8 +78,7 @@ namespace uch.Pages
 
                 Core.Context.SaveChanges();
 
-                // Обновляем жанры через прямой SQL или временно отключаем
-                // TODO: добавить сохранение жанров позже
+               
 
                 MessageBox.Show("Книга сохранена.");
                 NavigationService.GoBack();

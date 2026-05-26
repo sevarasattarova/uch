@@ -180,7 +180,7 @@ namespace uch.Pages
                 {
                     user.IsFrozen = false;
                     user.FreezeReason = null;
-                    MessageBox.Show($"✅ Пользователь {user.Username} разморожен.", "Успех",
+                    MessageBox.Show($"Пользователь {user.Username} разморожен.", "Успех",
                         MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
@@ -191,7 +191,7 @@ namespace uch.Pages
                 {
                     book.IsFrozen = false;
                     book.FreezeReason = null;
-                    MessageBox.Show($"✅ Книга '{book.Title}' разморожена.", "Успех",
+                    MessageBox.Show($"Книга '{book.Title}' разморожена.", "Успех",
                         MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
@@ -202,7 +202,7 @@ namespace uch.Pages
                 {
                     review.IsFrozen = false;
                     review.FreezeReason = null;
-                    MessageBox.Show($"✅ Отзыв разморожен.", "Успех",
+                    MessageBox.Show($"Отзыв разморожен.", "Успех",
                         MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
@@ -225,7 +225,7 @@ namespace uch.Pages
                 Core.Context.SaveChanges();
                 LoadUnfreezeRequests();
 
-                MessageBox.Show("✅ Заявка отклонена.", "Успех",
+                MessageBox.Show("Заявка отклонена.", "Успех",
                     MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }

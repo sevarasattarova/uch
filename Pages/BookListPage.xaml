@@ -10,7 +10,7 @@
 
 
         <TabControl Margin="10">
-            <TabItem Header="📖 Читаю">
+            <TabItem Header="Читаю">
                 <ListBox x:Name="ReadingList" SelectionChanged="MoveBook_Click">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
@@ -19,7 +19,7 @@
                     </ListBox.ItemTemplate>
                 </ListBox>
             </TabItem>
-            <TabItem Header="📚 Прочитано">
+            <TabItem Header="Прочитано">
                 <ListBox x:Name="ReadList" SelectionChanged="MoveBook_Click">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
@@ -28,7 +28,7 @@
                     </ListBox.ItemTemplate>
                 </ListBox>
             </TabItem>
-            <TabItem Header="📅 В планах">
+            <TabItem Header="В планах">
                 <ListBox x:Name="PlannedList" SelectionChanged="MoveBook_Click">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
@@ -37,7 +37,7 @@
                     </ListBox.ItemTemplate>
                 </ListBox>
             </TabItem>
-            <TabItem Header="❌ Заброшено">
+            <TabItem Header="Заброшено">
                 <ListBox x:Name="DroppedList" SelectionChanged="MoveBook_Click">
                     <ListBox.ItemTemplate>
                         <DataTemplate>

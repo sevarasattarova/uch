@@ -67,7 +67,7 @@ namespace uch.Pages
                 Core.Context.FreezeAppeals.Add(appeal);
                 Core.Context.SaveChanges();
 
-                MessageBox.Show("✅ Заявка на разморозку аккаунта отправлена администратору.\n\nОжидайте решения.",
+                MessageBox.Show("Заявка на разморозку аккаунта отправлена администратору.\n\nОжидайте решения.",
                     "Заявка отправлена", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 BackToLogin_Click(sender, e);
